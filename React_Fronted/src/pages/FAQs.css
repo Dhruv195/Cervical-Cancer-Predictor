@@ -1,0 +1,37 @@
+.faq-container {
+  width: 60%;
+  margin: auto;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.faq-list {
+  margin-top: 20px;
+}
+
+.faq {
+  margin-bottom: 10px;
+}
+
+.faq-question {
+  background-color: #f0f0f0;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon {
+  margin-left: 5px;
+}
+
+.faq-answer {
+  margin-top: 10px;
+}
+
+.footer-text {
+  margin-top: 20px;
+  text-align: center;
+}
