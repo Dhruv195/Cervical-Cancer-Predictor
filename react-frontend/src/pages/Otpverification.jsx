@@ -29,8 +29,6 @@ const Otpverification = () => {
 
   const location = useLocation();
   const EmailAddress = location.state && location.state.email;
-  const RegisteredDriverMasterID =
-    location.state && location.state.RegisteredId;
 
   const handleChange = (newValue) => {
     setOtpnum(newValue);
@@ -40,18 +38,19 @@ const Otpverification = () => {
     e.preventDefault();
 
     let request = {
-      otp: parseInt(otpnum),
-      RegisteredDriverMasterID,
+      Email: EmailAddress,
+      OTP: parseInt(otpnum),
     };
 
+    console.log("data", request);
     if (counter === 0) {
       toast.warning("Please Resend otp");
       console.log("resend otp");
-    } else if (isNaN(request.otp)) {
+    } else if (isNaN(request.OTP)) {
       toast.warning("Please enter OTP");
     } else {
       axios
-        .post(`${process.env.REACT_APP_API_VERIFYOTP_URL}`, request)
+        .post("http://127.0.0.1:5000/verifyotp", request)
         .then((response) => {
           console.log("API response:", response);
           if (response.status === 200) {
@@ -59,7 +58,7 @@ const Otpverification = () => {
             toast.success("Verified successful!");
           }
           setTimeout(() => {
-            navigate("/forgotpassword");
+            navigate("/login");
           }, 3000);
         })
         .catch((error) => {
@@ -76,15 +75,14 @@ const Otpverification = () => {
 
   const resendOtp = () => {
     let request = {
-      EmailAddress,
-      RegisteredDriverMasterID,
+      Email: EmailAddress,
     };
 
     if (counter === 1) {
       toast.warning("Please Resend otp");
     } else {
       axios
-        .post(`${process.env.REACT_APP_API_RESENDOTP_URL}`, request)
+        .post("http://127.0.0.1:5000/resendotp", request)
         .then((response) => {
           console.log("API response:", response);
           toast.success("OTP resent successfully!");

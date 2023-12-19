@@ -5,11 +5,13 @@ from db_config import db  # Import the SQLAlchemy object
 from flask_mail import Mail
 from flask_mail import Message  # Import the Message class from flask_mail
 from flask_cors import CORS  # Import the CORS module
+from flask import session  # Assuming you're using Flask sessions
+
 import random
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes in the app
-app.secret_key = "secret key"
+app.secret_key = "dhruv@12344#joshi"
 
 # Configure the Flask app to use the SQLAlchemy object
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/cancer'  # Replace with your actual database URI
@@ -39,10 +41,14 @@ class User(db.Model):
     user_lastname = db.Column(db.String(255))
     user_email = db.Column(db.String(255), unique=True)
     user_password = db.Column(db.String(255))
+    user_membership=db.Column(db.Integer)
+    user_otp=db.Column(db.Integer)
+
 
 # Create the tables within the Flask application context
 with app.app_context():
     db.create_all()
+
 
 @app.route('/register', methods=['POST'])
 def add_user():
@@ -52,19 +58,28 @@ def add_user():
         _lastname = data.get('LastName')
         _email = data.get('Email')
         _password = data.get('Password')
+        _membership = 100
 
         # validate the received values
         if _firstname and _lastname and _email and _password and request.method == 'POST':
             # do not save the password as plain text
             _hashed_password = generate_password_hash(_password)
 
-
+            # Generate OTP
             otp = generate_otp()
-            
-            # save edits
-            new_user = User(user_firstname=_firstname, user_lastname=_lastname, user_email=_email, user_password=_hashed_password)
+
+            # Save edits
+            new_user = User(
+                user_firstname=_firstname,
+                user_lastname=_lastname,
+                user_email=_email,
+                user_password=_hashed_password,
+                user_membership=_membership,
+                user_otp=otp  # Store OTP in the database
+            )
             db.session.add(new_user)
             db.session.commit()
+
             send_otp_email(_email, otp)
 
             flash('User added successfully!')
@@ -74,19 +89,79 @@ def add_user():
 
     except Exception as e:
         print(e)
-        return jsonify({'error': 'Internal Server Error'}), 500
-    
+        return jsonify({'error': 'Internal Server Error'}), 500 
 
 
 def generate_otp():
     # Generate a random 6-digit OTP
     return str(random.randint(100000, 999999))
 
+
 def send_otp_email(email, otp):
     # Compose and send the OTP email
     msg = Message('Your OTP for Registration', recipients=[email])
     msg.body = f'Your OTP is: {otp}'
     mail.send(msg)
+
+
+@app.route('/verifyotp', methods=['POST'])
+def verify_otp():
+    try:
+        data = request.get_json()
+        _email = data.get('Email')
+        _otp = data.get('OTP')
+
+        user = User.query.filter_by(user_email=_email).first()
+
+        if user:
+            stored_otp = user.user_otp  # Assuming 'user_otp' is the field in the User model that stores the OTP
+
+            if _otp == stored_otp:
+                user.user_membership = 200  # Set membership to 200 if OTP is verified
+                db.session.commit()
+                return jsonify({'message': 'OTP verified successfully!'})
+            else:
+                user.user_membership = 300  # Set membership to 300 if OTP is not verified
+                db.session.commit()
+                return jsonify({'error': 'Invalid OTP'}), 400
+        else:
+            return jsonify({'error': 'User not found'}), 404
+
+    except Exception as e:
+        print(e)
+        return jsonify({'error': 'Internal Server Error'}), 500
+
+@app.route('/resendotp', methods=['POST'])
+def resend_otp():
+    try:
+        data = request.get_json()
+        _email = data.get('Email')
+
+        # validate the received values
+        if _email and request.method == 'POST':
+            # Retrieve the user from the database based on the email
+            user = User.query.filter_by(user_email=_email).first()
+
+            if user:
+                # Generate a new OTP
+                new_otp = generate_otp()
+
+                # Update the stored OTP in the database
+                user.user_otp = new_otp
+                db.session.commit()
+
+                # Send the new OTP via email
+                send_otp_email(_email, new_otp)
+
+                return jsonify({'message': 'OTP resent successfully!'})
+            else:
+                return jsonify({'error': 'User not found'}), 404
+        else:
+            return jsonify({'error': 'Missing required fields'}), 400
+
+    except Exception as e:
+        print(e)
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 @app.route('/login', methods=['POST'])
 def login_user():

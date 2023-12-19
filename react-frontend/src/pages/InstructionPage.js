@@ -9,6 +9,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { useState } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
+import BackspaceIcon from "@mui/icons-material/Backspace";
 
 const InstructionPage = ({ setUserState, FirstName, LastName }) => {
   const [uploading, setUploading] = useState(false);
@@ -55,6 +56,17 @@ const InstructionPage = ({ setUserState, FirstName, LastName }) => {
   };
   return (
     <>
+      <Button
+        style={{
+          backgroundColor: "red",
+          color: "white",
+          float: "right",
+        }}
+        startIcon={<BackspaceIcon />}
+        href="/login"
+      >
+        Exit
+      </Button>
       <div className="instruction-container">
         <h2 style={{ color: "Black" }}>
           Welcome {FirstName}

@@ -6,6 +6,7 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import Title from "../components/Title";
 import { useNavigate, NavLink } from "react-router-dom";
 import { tabTitle } from "../App";
+import { ToastContainer, toast } from "react-toastify";
 
 const Register = ({ setUserState }) => {
   tabTitle("Registration | Cervical Cancer Awareness ");
@@ -40,11 +41,19 @@ const Register = ({ setUserState }) => {
         Email: values.email,
         Password: values.cpassword,
       };
+
       console.log("user", user);
-      axios.post("http://127.0.0.1:5000/register", user).then((res) => {
-        alert(res.data.message);
-        setUserState(res.data.user);
-        navigate("/otpverification", { replace: true });
+
+      axios.post("http://127.0.0.1:5000/register", user).then((response) => {
+        // Handle successful response here, if needed
+        console.log("API response:", response); // Console log
+        toast.success("Register successful!");
+
+        navigate("/otpverification", {
+          state: {
+            email: formik.values.email,
+          },
+        });
       });
     },
   });
@@ -60,6 +69,8 @@ const Register = ({ setUserState }) => {
         px: 2,
       }}
     >
+      <ToastContainer position="top-center" />
+
       <Title text={"Registration"} textAlign={"center"} />
 
       <Box
