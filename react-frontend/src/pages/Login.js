@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Box, Button, Stack, TextField } from "@mui/material";
 import Title from "../components/Title";
 import { useNavigate, NavLink } from "react-router-dom";
+import { tabTitle } from "../App";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -15,6 +16,8 @@ const validationSchema = yup.object().shape({
 });
 
 const Login = ({ setUserState }) => {
+  tabTitle("Login | Cervical Cancer Awareness");
+
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -113,7 +116,7 @@ const Login = ({ setUserState }) => {
         >
           Login
         </Button>
-        <NavLink to="/register">Not yet registered? Register Now</NavLink>
+        <NavLink to="/register">Not registered yet ? Register Now</NavLink>
       </Box>
     </Stack>
   );

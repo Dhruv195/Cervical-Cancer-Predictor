@@ -5,8 +5,11 @@ import * as yup from "yup";
 import { Box, Button, Stack, TextField } from "@mui/material";
 import Title from "../components/Title";
 import { useNavigate, NavLink } from "react-router-dom";
+import { tabTitle } from "../App";
 
 const Register = ({ setUserState }) => {
+  tabTitle("Registration | Cervical Cancer Awareness ");
+
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -41,7 +44,7 @@ const Register = ({ setUserState }) => {
       axios.post("http://127.0.0.1:5000/register", user).then((res) => {
         alert(res.data.message);
         setUserState(res.data.user);
-        navigate("/login", { replace: true });
+        navigate("/otpverification", { replace: true });
       });
     },
   });
@@ -57,7 +60,7 @@ const Register = ({ setUserState }) => {
         px: 2,
       }}
     >
-      <Title text={"Register"} textAlign={"center"} />
+      <Title text={"Registration"} textAlign={"center"} />
 
       <Box
         component="form"

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "./FAQs.css"; // Import the CSS file
+import { tabTitle } from "../App";
 
 const FAQs = () => {
+  tabTitle("FAQs | Cervical Cancer Awareness");
   const [faqs, setFaqs] = useState([
     {
       question: "What is cervical cancer?",
@@ -79,8 +81,9 @@ const FAQs = () => {
         {faqs.map((faq, index) => (
           <div className="faq" key={index}>
             <a onClick={() => toggleFaq(index)} className="faq-question">
+              Q: {faq.question}
               {faq.question}
-              {openFaq === index && <span className="icon">–</span>}
+              {openFaq === index && <span className="icon">-</span>}
               {openFaq !== index && <span className="icon">+</span>}
             </a>
             {openFaq === index && (

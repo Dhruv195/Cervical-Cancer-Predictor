@@ -10,24 +10,6 @@
   border-radius: 8px;
 }
 
-h1,
-h2 {
-  /* color: #333;
-  padding: 5px; */
-}
-
-/* p {
-  color: #555;
-} */
-
-/* ol {
-  padding-left: 20px;
-}
-
-li {
-  margin-bottom: 10px;
-} */
-
 .Section {
   display: flex;
   flex-direction: column;
@@ -71,4 +53,30 @@ li {
 
 .Cancel:hover {
   cursor: pointer;
+}
+
+.mainbody {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.secondbody {
+  width: 90%;
+  padding: 10px;
+}
+
+@media only screen and (min-width: 900px) {
+  .secondbody {
+    padding: 20px;
+    width: 30%;
+    margin: 60px auto;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .ActionBox {
+    width: 300px;
+  }
 }

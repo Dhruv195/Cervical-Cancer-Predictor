@@ -1,6 +1,5 @@
 import React from "react";
-import { Box, Button, styled, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Box, styled } from "@mui/material";
 //img
 // import headerImg from "../assets/pexels-photo-579474.jpeg";
 import "./Styles.css";
@@ -9,9 +8,8 @@ const Header = () => {
   const CustomBox = styled(Box)(({ theme }) => ({
     display: "flex",
     justifyContent: "center",
-
     gap: theme.spacing(2),
-    backgroundColor: "#F7567C",
+    // backgroundColor: "#F7567C",
     [theme.breakpoints.down("md")]: {
       flexDirection: "column",
       alignItems: "center",

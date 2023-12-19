@@ -48,7 +48,7 @@ const Footer = () => {
       <StackColumn>
         <FooterTitle text={"Quick Links"} />
         <Link
-          href="#"
+          href="/"
           variant="body2"
           sx={{
             color: "#414141",
@@ -60,7 +60,7 @@ const Footer = () => {
           Home
         </Link>
         <Link
-          href="#"
+          href="/symptoms"
           variant="body2"
           sx={{
             color: "#414141",
@@ -72,7 +72,7 @@ const Footer = () => {
           Symptoms{" "}
         </Link>
         <Link
-          href="#"
+          href="/contact"
           variant="body2"
           sx={{
             color: "#414141",
@@ -84,7 +84,7 @@ const Footer = () => {
           Contact{" "}
         </Link>
         <Link
-          href="#"
+          href="/FAQs"
           variant="body2"
           sx={{
             color: "#414141",
@@ -94,6 +94,18 @@ const Footer = () => {
           }}
         >
           FAQs
+        </Link>
+        <Link
+          href="/login"
+          variant="body2"
+          sx={{
+            color: "#414141",
+            "&:hover": {
+              color: "#1c2859",
+            },
+          }}
+        >
+          Signin / Signup
         </Link>
       </StackColumn>
 

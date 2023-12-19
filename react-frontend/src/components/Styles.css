@@ -1,10 +1,17 @@
+.title {
+  text-decoration: none;
+  color: #fff;
+}
+.title:hover {
+  background-color: #1e2a5a;
+}
+
 @media only screen and (min-width: 900px) {
   .containerStyle {
     background-size: cover;
     background-position: center;
     width: 100%;
     min-height: 650px;
-
     background-image: url("../assets//main.jpg");
   }
   .section2 {

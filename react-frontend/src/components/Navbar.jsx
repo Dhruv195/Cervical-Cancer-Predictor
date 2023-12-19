@@ -37,7 +37,7 @@ const itemList = [
   },
   {
     text: "Symptoms",
-    to: "/about",
+    to: "/symptoms",
   },
   {
     text: "Contact",
@@ -49,7 +49,7 @@ const itemList = [
   },
   {
     text: "Sigin/Signup",
-    to: "/register",
+    to: "/login",
   },
 ];
 
@@ -64,9 +64,17 @@ const Navbar = () => {
       elevation={0}
     >
       <StyledToolbar>
-        <Typography variant="h6" component="h2">
-          Cervical Cancer Awareness
-        </Typography>
+        <Link
+          to="/"
+          style={{
+            textDecoration: "none",
+            color: "#fff",
+          }}
+        >
+          <Typography variant="h6" component="h2">
+            Cervical Cancer Awareness
+          </Typography>
+        </Link>
         <Box sx={{ display: { xs: "block", sm: "none" } }}>
           <DrawerItem />
         </Box>

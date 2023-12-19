@@ -1,46 +1,57 @@
 // src/components/InstructionPage.js
 import React from "react";
 import "./InstructionPage.css"; // Import the CSS file
-import { useNavigate } from "react-router-dom";
+import { MDBInputGroup } from "mdb-react-ui-kit";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { useState } from "react";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const InstructionPage = ({ setUserState, FirstName, LastName }) => {
   const [uploading, setUploading] = useState(false);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [value, setValue] = useState("");
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    if (image) {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("file", image);
-      console.log("inp", formData);
-      axios
-        .post(URL, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then(({ data }) => {
-          console.log("res", data);
-          const d = data.prediction.split("_").join(" ").toUpperCase();
-          setValue(d);
-          setImage("");
-          setUploading(false);
-        })
-        .catch((err) => {
-          console.log("err", err);
-          setValue("Oops! Some Error Occured");
-          setImage("");
-          setUploading(false);
-        });
-    }
+  const [percentage, setPercentage] = useState(0);
+
+  const handleClick = () => {
+    setUploading(true);
+    setPercentage(0);
+
+    console.log("Image:", image);
+
+    const formData = new FormData();
+    formData.append("file", image);
+
+    axios
+      .post(URL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentage = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          console.log("Upload Progress: " + percentage + "%");
+          setPercentage(percentage);
+        },
+      })
+      .then(({ data }) => {
+        console.log("res", data);
+        const d = data.prediction.split("_").join(" ").toUpperCase();
+        setValue(d);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        setValue("Oops! Some Error Occurred");
+      })
+      .finally(() => {
+        setImage(null); // Reset image after upload, regardless of success or failure
+        setUploading(false);
+      });
   };
   return (
     <>
@@ -86,7 +97,13 @@ const InstructionPage = ({ setUserState, FirstName, LastName }) => {
             >
               Upload The Image For Classification
             </Typography>
-
+            {uploading && (
+              <LinearProgress
+                variant="determinate"
+                value={percentage}
+                sx={{ width: "100%", marginBottom: 3, marginTop: 3 }}
+              />
+            )}
             {!uploading ? (
               <>
                 <CloudUploadIcon
@@ -97,16 +114,16 @@ const InstructionPage = ({ setUserState, FirstName, LastName }) => {
                     marginTop: 3,
                   }}
                 />
-                <input
-                  type="file"
-                  name="file"
-                  onChange={(e) => setImage(e.target.files[0])}
-                />
+                <MDBInputGroup textTag="label">
+                  <input
+                    accept="image/*, .pdf, .doc"
+                    type="file"
+                    name="file"
+                    onChange={(e) => setImage(e.target.files[0])}
+                  />
+                </MDBInputGroup>
               </>
-            ) : (
-              <CircularProgress />
-            )}
-
+            ) : null}
             <Button
               variant="contained"
               className="UploadButton"
@@ -116,7 +133,7 @@ const InstructionPage = ({ setUserState, FirstName, LastName }) => {
             >
               Upload
             </Button>
-            {value ? (
+            {value && percentage === 100 && (
               <Box className="ResultBox" sx={{ marginBottom: 3, marginTop: 3 }}>
                 <Typography
                   sx={{ border: "primary" }}
@@ -133,8 +150,6 @@ const InstructionPage = ({ setUserState, FirstName, LastName }) => {
                   }}
                 />
               </Box>
-            ) : (
-              <></>
             )}
           </Box>
         </Stack>
