@@ -3,13 +3,13 @@ import React from "react";
 import "./InstructionPage.css"; // Import the CSS file
 import { MDBInputGroup } from "mdb-react-ui-kit";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import CircularProgress from "@mui/material/CircularProgress";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { useState } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import BackspaceIcon from "@mui/icons-material/Backspace";
+import IconButton from "@mui/material/IconButton";
 
 const InstructionPage = ({ setUserState, FirstName, LastName }) => {
   const [uploading, setUploading] = useState(false);
@@ -54,23 +54,23 @@ const InstructionPage = ({ setUserState, FirstName, LastName }) => {
         setUploading(false);
       });
   };
+
   return (
     <>
-      <Button
-        style={{
-          backgroundColor: "red",
-          color: "white",
-          float: "right",
-        }}
-        startIcon={<BackspaceIcon />}
-        href="/login"
-      >
-        Exit
-      </Button>
       <div className="instruction-container">
+        <Button
+          style={{
+            backgroundColor: "red",
+            color: "white",
+            float: "right",
+          }}
+          startIcon={<BackspaceIcon />}
+          href="/login"
+        >
+          Exit
+        </Button>
         <h2 style={{ color: "Black" }}>
-          Welcome {FirstName}
-          {LastName} !!
+          Welcome {FirstName} {LastName} !!
         </h2>
 
         <h1>Instructions for Cervical Cancer Prediction</h1>
@@ -95,10 +95,10 @@ const InstructionPage = ({ setUserState, FirstName, LastName }) => {
           direction="column"
           justifyContent="center"
           alignItems="center"
-          sx={{
-            py: 5,
-            px: 5,
-          }}
+          // sx={{
+          //   py: 5,
+          //   px: 5,
+          // }}
         >
           <Box className="ActionBox">
             <Typography
@@ -126,14 +126,40 @@ const InstructionPage = ({ setUserState, FirstName, LastName }) => {
                     marginTop: 3,
                   }}
                 />
-                <MDBInputGroup textTag="label">
-                  <input
-                    accept="image/*, .pdf, .doc"
-                    type="file"
-                    name="file"
-                    onChange={(e) => setImage(e.target.files[0])}
+
+                <input
+                  accept="image/*, .pdf, .doc"
+                  style={{ display: "none" }}
+                  id="raised-button-file"
+                  type="file"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
+                <label htmlFor="raised-button-file">
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="span"
+                  >
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={(e) => setImage(e.target.files[0])}
+                    />
+                    Choose the Image
+                  </IconButton>
+                </label>
+                {image && (
+                  <img
+                    src={URL.createObjectURL(image)} // Use URL.createObjectURL to create a URL for the image
+                    alt="Uploaded file"
+                    style={{
+                      // borderRadius: "50%",
+                      width: "20%",
+                      height: "100%",
+                    }}
                   />
-                </MDBInputGroup>
+                )}
               </>
             ) : null}
             <Button
