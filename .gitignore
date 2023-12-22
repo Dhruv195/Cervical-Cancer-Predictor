@@ -4,7 +4,8 @@
 react-frontend/node_modules
 /.pnp
 .pnp.js
-
+flask-backend/Model
+flask-backend/local
 # testing
 /coverage
 

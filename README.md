@@ -1,6 +1,6 @@
 # Cervical-cancer-web-application
 
-## Deployment
+## Installation
 
 Front-End
 
@@ -15,5 +15,5 @@ Back-End
 ```bash
 cd flask-backend
 pip install -r requirements.txt
-python main.py
+flask run
 ```

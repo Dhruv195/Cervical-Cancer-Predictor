@@ -1,13 +1,9 @@
 /* src/components/InstructionPage.css */
-.instruction-container {
-  max-width: 50rem;
-  height: 40rem;
-  margin: auto;
-  padding: 20px;
-  text-align: left;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  border-radius: 8px;
+
+.firstbody {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
 }
 
 .Section {
@@ -19,21 +15,32 @@
   background-color: aliceblue;
 }
 
+.Section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 2px;
+  background-color: #ccc;
+}
+
 .ActionBox {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 400px;
+  width: 50vw;
+  height: 60vh;
   border-radius: 10px;
   background-color: white;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-  /* padding: 20px; */
+  padding: 20px;
+  margin: 20px;
 }
 
 .UploadButton {
   height: 50px;
   width: 250px;
-  margin: 20px;
 }
 
 .UploadButton:hover {
@@ -41,11 +48,9 @@
 }
 
 .ResultBox {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 350px;
-  height: 30px;
+  width: 500px;
+  height: 200px;
   border-radius: 10px;
   background-color: whitesmoke;
   padding: 10px;
@@ -78,5 +83,10 @@
 @media only screen and (max-width: 900px) {
   .ActionBox {
     width: 300px;
+    height: 60vh;
+  }
+  .ResultBox {
+    width: 300px;
+    height: 200px;
   }
 }

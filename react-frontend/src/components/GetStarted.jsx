@@ -4,7 +4,7 @@ import Title from "./Title";
 // img
 import imgDetail from "../assets/statics_map.jpg";
 import imgDetail2 from "../assets/chart.jpg";
-import imgDetail3 from "../assets/o63jkjem.png";
+import imgDetail3 from "../assets/abc.jpg";
 import imgDetail4 from "../assets//20200925_210520.jpg";
 
 const GetStarted = () => {

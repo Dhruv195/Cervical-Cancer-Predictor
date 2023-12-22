@@ -1,10 +1,11 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import "./FAQs.css"; // Import the CSS file
 import { tabTitle } from "../App";
 
 const FAQs = () => {
   tabTitle("FAQs | Cervical Cancer Awareness");
-  const [faqs, setFaqs] = useState([
+  const [faqs] = useState([
     {
       question: "What is cervical cancer?",
       answer:

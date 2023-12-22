@@ -40,7 +40,6 @@ function App() {
             element={
               userstate ? (
                 <InstructionPage
-                  setUserState={setUserState}
                   FirstName={userstate.FirstName}
                   LastName={userstate.LastName}
                 />
