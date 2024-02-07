@@ -9,11 +9,14 @@ import { useState } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 import CancerInfo from "./CancerInfo";
+import { tabTitle } from "../App";
 
 const InstructionPage = ({ FirstName, LastName }) => {
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState(null);
   const [info, setInfo] = useState("");
+
+  tabTitle("Instruction | Cervical Cancer Awareness");
 
   const [percentage, setPercentage] = useState(0);
 

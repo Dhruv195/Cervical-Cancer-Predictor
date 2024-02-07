@@ -6,6 +6,8 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import Title from "../components/Title";
 import { useNavigate, NavLink } from "react-router-dom";
 import { tabTitle } from "../App";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -34,14 +36,18 @@ const Login = ({ setUserState }) => {
       console.log("val", user);
 
       axios.post("http://127.0.0.1:5000/login", user).then((res) => {
-        alert(res.data.message);
+        // alert(res.data.message);
+        toast.success(res.data.message);
         console.log("res", res);
         let user = {
           FirstName: res.data.FirstName,
           LastName: res.data.LastName,
         };
         setUserState(user);
-        navigate("/InstructionPage", { replace: true });
+
+        setTimeout(function () {
+          navigate("/InstructionPage", { replace: true });
+        }, 3000);
       });
     },
   });
@@ -58,7 +64,7 @@ const Login = ({ setUserState }) => {
       }}
     >
       <Title text={"Login"} textAlign={"center"} />
-
+      <ToastContainer position="top-center" />
       <Box
         component="form"
         noValidate

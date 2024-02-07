@@ -9,12 +9,13 @@ from flask import session  # Assuming you're using Flask sessions
 from PIL import Image
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.resnet_v2 import preprocess_input
+from keras.models import load_model
+from keras.preprocessing import image
+from keras.applications.resnet_v2 import preprocess_input
 import numpy as np
 import os
 import random
+import cv2
 
 
 app = Flask(__name__)
@@ -217,11 +218,57 @@ inceptionresnetv2 = load_model('Model/InceptionResNetV2.h5')
 # Define the custom classes
 classes = ['carcinoma_in_situ', 'light_dysplastic', 'moderate_dysplastic', 'normal_columnar', 'normal_intermediate', 'normal_superficiel', 'severe_dysplastic']
 
-# Function to preprocess image for model input
+# # Function to preprocess image for model input
+# def preprocess_image(image_path):
+#     img = Image.open(image_path)
+#     img = img.convert('RGB')
+#     img = img.resize((224, 224))
+#     img_array = np.array(img)
+#     img_array = np.expand_dims(img_array, axis=0)
+#     img_array = preprocess_input(img_array)
+#     return img_array
+
+# # Define the determine_cancerous function
+# def determine_cancerous(class_name):
+#     cancerous_classes = {
+#         'carcinoma_in_situ': True,
+#         'light_dysplastic': True,
+#         'moderate_dysplastic': True,
+#         'normal_columnar': False,
+#         'normal_intermediate': False,
+#         'normal_superficiel': False,
+#         'severe_dysplastic': True,
+#     }
+
+#     return cancerous_classes.get(class_name, None)
+
+
+# def nlm_filter(image):
+#     filtered_image = cv2.fastNlMeansDenoisingColored(image, None, 10, 10, 7, 21)
+#     return filtered_image
+
+# # Function to make predictions with thresholding
+# def preprocess_image(image_path):
+#     # Read the image
+#     img = cv2.imread(image_path)
+#     # Convert to RGB
+#     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+#     # Apply NLM filter
+#     img_rgb_filtered = nlm_filter(img_rgb)
+#     # Resize to 224x224
+#     img_resized = cv2.resize(img_rgb_filtered, (224, 224))
+#     # Expand dimensions to match model input shape
+#     img_array = np.expand_dims(img_resized, axis=0)
+#     # Preprocess input for the model
+#     img_array = preprocess_input(img_array)
+#     return img_array
+
+# Function to make predictions with thresholding
 def preprocess_image(image_path):
     img = Image.open(image_path)
+    img = img.convert('RGB')
     img = img.resize((224, 224))
-    img_array = image.img_to_array(img)
+    img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0)
     img_array = preprocess_input(img_array)
     return img_array
@@ -240,53 +287,65 @@ def determine_cancerous(class_name):
 
     return cancerous_classes.get(class_name, None)
 
+# Function to make predictions with thresholding and majority voting
+def predict_with_threshold_and_majority(models, img_path, threshold=0.8):
+    img = preprocess_image(img_path)
+    predictions = []
+
+    for model in models:
+        preds = model.predict(img)
+        class_idx = np.argmax(preds)
+        class_prob = preds[0, class_idx]
+        class_name = classes[class_idx]
+        predictions.append(class_name)
+
+    print(f"Predictions: {predictions}")
+
+    # Check if there are predictions
+    if predictions:
+        # Extract probabilities for known classes
+        prob_known_classes = [pred_prob for pred_prob in preds[0, :-1] if pred_prob is not None]
+
+        if prob_known_classes:
+            # Check if the maximum probability for known classes is above the threshold
+            max_prob_known_classes = np.max(prob_known_classes)
+            print(f"Max Probability for Known Classes: {max_prob_known_classes}")
+
+            if max_prob_known_classes > threshold:
+                # Apply majority voting to determine the final prediction
+                class_indices = [classes.index(class_name) for class_name in predictions]
+                majority_class_idx = np.argmax(np.bincount(class_indices))
+                majority_class_name = classes[majority_class_idx]
+                chances = class_indices.count(majority_class_idx) / len(class_indices) * 100
+
+                # Determine if the majority class is cancerous
+                is_cancerous = determine_cancerous(majority_class_name)
+
+                return {'prediction': majority_class_name, 'probability': chances, 'is_cancerous': is_cancerous}
+
+    # Predicted as an unknown class
+    return {'prediction': 'unknown', 'probability': 0, 'is_cancerous': False}
+
 @app.route('/modelpredict', methods=['POST'])
 @cross_origin()
 def serve():
-    print("hello", request)
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
     file = request.files['file']
-    print("file", file)
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
 
     if file:
-        filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        filename = 'local/' + file.filename  # Assuming 'uploads' is your desired upload folder
         file.save(filename)
         try:
-            # Preprocess the image
-            img = preprocess_image(filename)
-            
-            # Make predictions using each model
-            predictions = []
-            for model in [resnet50v2, resnet101, densenet121, densenet169, xceptionnet, inceptionresnetv2]:
-                preds = model.predict(img)
-                class_idx = np.argmax(preds)
-                class_prob = preds[0, class_idx]
-                class_name = classes[class_idx]
-                predictions.append(class_name)
-
-            # Apply majority voting
-            majority_class = max(set(predictions), key=predictions.count)
-            majority_prob = predictions.count(majority_class) / len(predictions) * 100
-
-            # Determine if the class is cancerous
-            is_cancerous = determine_cancerous(majority_class)
-
-            # Display the predicted class, probability, and cancerous status
-            response_data = {
-                'prediction': majority_class,
-                'probability': majority_prob,
-                'is_cancerous': is_cancerous,
-            }
-
-            return jsonify(response_data)
+            result = predict_with_threshold_and_majority([resnet50v2,resnet101,densenet121,densenet169,xceptionnet,inceptionresnetv2], filename)
+            return jsonify(result)
         except Exception as e:
             print(str(e))
             return jsonify({'error': 'Oops Some Error Occurred'}), 400
-    return jsonify({'error': 'Oops Some Error Occurred'}), 400
+    return jsonify({'error': 'Oops Some Error Occurred'}),400
 
 if __name__ == "__main__":
     app.run(debug=True)
