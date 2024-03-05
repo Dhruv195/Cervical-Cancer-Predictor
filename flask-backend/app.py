@@ -218,31 +218,6 @@ inceptionresnetv2 = load_model('Model/InceptionResNetV2.h5')
 # Define the custom classes
 classes = ['carcinoma_in_situ', 'light_dysplastic', 'moderate_dysplastic', 'normal_columnar', 'normal_intermediate', 'normal_superficiel', 'severe_dysplastic']
 
-# # Function to preprocess image for model input
-# def preprocess_image(image_path):
-#     img = Image.open(image_path)
-#     img = img.convert('RGB')
-#     img = img.resize((224, 224))
-#     img_array = np.array(img)
-#     img_array = np.expand_dims(img_array, axis=0)
-#     img_array = preprocess_input(img_array)
-#     return img_array
-
-# # Define the determine_cancerous function
-# def determine_cancerous(class_name):
-#     cancerous_classes = {
-#         'carcinoma_in_situ': True,
-#         'light_dysplastic': True,
-#         'moderate_dysplastic': True,
-#         'normal_columnar': False,
-#         'normal_intermediate': False,
-#         'normal_superficiel': False,
-#         'severe_dysplastic': True,
-#     }
-
-#     return cancerous_classes.get(class_name, None)
-
-
 # def nlm_filter(image):
 #     filtered_image = cv2.fastNlMeansDenoisingColored(image, None, 10, 10, 7, 21)
 #     return filtered_image
