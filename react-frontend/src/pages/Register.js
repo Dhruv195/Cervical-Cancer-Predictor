@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -7,11 +7,9 @@ import Title from "../components/Title";
 import { useNavigate, NavLink } from "react-router-dom";
 import { tabTitle } from "../App";
 import { ToastContainer, toast } from "react-toastify";
-import LoadingScreen from "../LoadingScreen";
 
 const Register = ({ setUserState }) => {
   tabTitle("Registration | Cervical Cancer Awareness ");
-  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -45,7 +43,6 @@ const Register = ({ setUserState }) => {
       };
 
       console.log("user", user);
-      setLoading(true);
 
       axios.post("http://127.0.0.1:5000/register", user).then((response) => {
         // Handle successful response here, if needed
@@ -177,7 +174,6 @@ const Register = ({ setUserState }) => {
         </Button>
         <NavLink to="/login">Already registered? Login</NavLink>
       </Box>
-      {loading && <LoadingScreen />}
     </Stack>
   );
 };

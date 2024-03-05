@@ -10,7 +10,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 import CancerInfo from "./CancerInfo";
 import { tabTitle } from "../App";
-import LoadingScreen from "../LoadingScreen";
 
 const InstructionPage = ({ FirstName, LastName }) => {
   const [uploading, setUploading] = useState(false);
@@ -20,7 +19,6 @@ const InstructionPage = ({ FirstName, LastName }) => {
   tabTitle("Instruction | Cervical Cancer Awareness");
 
   const [percentage, setPercentage] = useState(0);
-  const [loading, setLoading] = useState(false);
 
   const handleClick = () => {
     setUploading(true);
@@ -30,7 +28,6 @@ const InstructionPage = ({ FirstName, LastName }) => {
 
     const formData = new FormData();
     formData.append("file", image);
-    setLoading(true);
 
     axios
       .post("http://127.0.0.1:5000/modelpredict", formData, {
@@ -57,7 +54,6 @@ const InstructionPage = ({ FirstName, LastName }) => {
         console.log("res", data);
         setInfo(data.prediction);
         setImage(data.file);
-        setLoading(false);
       })
       .catch((err) => {
         console.log("err", err);
@@ -202,7 +198,6 @@ const InstructionPage = ({ FirstName, LastName }) => {
           </div>
         </Stack>
       </div>
-      {loading && <LoadingScreen />}
     </div>
   );
 };
