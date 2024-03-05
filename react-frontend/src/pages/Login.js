@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -8,6 +8,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import { tabTitle } from "../App";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingScreen from "../LoadingScreen.js";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -20,6 +21,8 @@ const validationSchema = yup.object().shape({
 const Login = ({ setUserState }) => {
   tabTitle("Login | Cervical Cancer Awareness");
 
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -28,7 +31,9 @@ const Login = ({ setUserState }) => {
       password: "",
     },
     validationSchema: validationSchema,
+
     onSubmit: (values) => {
+      setLoading(true);
       let user = {
         Email: values.email,
         Password: values.password,
@@ -47,7 +52,7 @@ const Login = ({ setUserState }) => {
 
         setTimeout(function () {
           navigate("/InstructionPage", { replace: true });
-        }, 3000);
+        }, 2000);
       });
     },
   });
@@ -124,6 +129,7 @@ const Login = ({ setUserState }) => {
         </Button>
         <NavLink to="/register">Not registered yet ? Register Now</NavLink>
       </Box>
+      {loading && <LoadingScreen />}
     </Stack>
   );
 };
