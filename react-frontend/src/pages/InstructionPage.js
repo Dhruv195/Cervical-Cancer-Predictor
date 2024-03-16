@@ -58,6 +58,12 @@ const InstructionPage = ({ FirstName, LastName }) => {
         setInfo(data.prediction);
         setImage(data.file);
         setLoading(false);
+
+        // Scroll down after successful response
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
       })
       .catch((err) => {
         console.log("err", err);

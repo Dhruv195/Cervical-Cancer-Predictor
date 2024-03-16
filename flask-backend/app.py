@@ -23,7 +23,7 @@ CORS(app)  # Enable CORS for all routes in the app
 app.secret_key = "dhruv@12344#joshi"
 
 # Configure the Flask app to use the SQLAlchemy object
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Root@localhost/cancer'  # Replace with your actual database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/cancer'  # Replace with your actual database URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -212,7 +212,6 @@ resnet50v2 = load_model('Model/ResNet50V2_model.h5')
 resnet101 = load_model('Model/ResNet101V2_model.h5')
 densenet121 = load_model('Model/DenseNet121_model.h5')
 densenet169 = load_model('Model/DenseNet169_model.h5')
-xceptionnet = load_model('Model/XceptionNet_model.h5')
 inceptionresnetv2 = load_model('Model/InceptionResNetV2.h5')
 
 # Define the custom classes
@@ -340,7 +339,7 @@ def serve():
         filename = 'local/' + file.filename  # Assuming 'uploads' is your desired upload folder
         file.save(filename)
         try:
-            result = predict_with_threshold_and_majority([resnet50v2,resnet101,densenet121,densenet169,xceptionnet,inceptionresnetv2], filename)
+            result = predict_with_threshold_and_majority([resnet50v2,resnet101,densenet121,densenet169,inceptionresnetv2], filename)
             return jsonify(result)
         except Exception as e:
             print(str(e))
