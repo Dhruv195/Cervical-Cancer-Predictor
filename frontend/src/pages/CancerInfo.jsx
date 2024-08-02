@@ -58,20 +58,20 @@ const CancerInfo = ({ className }) => {
 
   const info = cancerousClasses[className];
 
-  if (!info) {
-    return <div>No information available for the specified class name.</div>;
+  if (info) {
+    return (
+      <div>
+        <h2>Class-Name: {className}</h2>
+        <p>Cancerous Cell: {info.cancerous_cell ? "true" : "false"}</p>
+        <p>Stage: {info.stage}</p>
+        <p>Symptoms: {info.symptoms}</p>
+        <p>Treatments: {info.treatments}</p>
+        <p>Pros & Cons: {info.pros_cons}</p>
+      </div>
+    );
+  } else {
+    return <div>Please enter a valid image.</div>;
   }
-
-  return (
-    <div>
-      <h2>Class-Name: {className}</h2>
-      <p>Cancerous Cell: {info.cancerous_cell ? "true" : "false"}</p>
-      <p>Stage: {info.stage}</p>
-      <p>Symptoms: {info.symptoms}</p>
-      <p>Treatments: {info.treatments}</p>
-      <p>Pros & Cons: {info.pros_cons}</p>
-    </div>
-  );
 };
 
 export default CancerInfo;

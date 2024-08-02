@@ -15,7 +15,7 @@ from keras.applications.resnet_v2 import preprocess_input
 import numpy as np
 import os
 import random
-import cv2
+# import cv2
 
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ CORS(app)  # Enable CORS for all routes in the app
 app.secret_key = "dhruv@12344#joshi"
 
 # Configure the Flask app to use the SQLAlchemy object
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/cancer'  # Replace with your actual database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Root@localhost/cancer'  # Replace with your actual database URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -215,32 +215,8 @@ densenet169 = load_model('Model/DenseNet169_model.h5')
 inceptionresnetv2 = load_model('Model/InceptionResNetV2.h5')
 
 # Define the custom classes
-classes = ['carcinoma_in_situ', 'light_dysplastic', 'moderate_dysplastic', 'normal_columnar', 'normal_intermediate', 'normal_superficiel', 'severe_dysplastic']
-
-# # Function to preprocess image for model input
-# def preprocess_image(image_path):
-#     img = Image.open(image_path)
-#     img = img.convert('RGB')
-#     img = img.resize((224, 224))
-#     img_array = np.array(img)
-#     img_array = np.expand_dims(img_array, axis=0)
-#     img_array = preprocess_input(img_array)
-#     return img_array
-
-# # Define the determine_cancerous function
-# def determine_cancerous(class_name):
-#     cancerous_classes = {
-#         'carcinoma_in_situ': True,
-#         'light_dysplastic': True,
-#         'moderate_dysplastic': True,
-#         'normal_columnar': False,
-#         'normal_intermediate': False,
-#         'normal_superficiel': False,
-#         'severe_dysplastic': True,
-#     }
-
-#     return cancerous_classes.get(class_name, None)
-
+classes = ['carcinoma_in_situ', 'light_dysplastic', 'moderate_dysplastic', 
+           'normal_columnar', 'normal_intermediate', 'normal_superficiel', 'severe_dysplastic']
 
 # def nlm_filter(image):
 #     filtered_image = cv2.fastNlMeansDenoisingColored(image, None, 10, 10, 7, 21)
@@ -283,7 +259,6 @@ def determine_cancerous(class_name):
         'normal_superficiel': False,
         'severe_dysplastic': True,
     }
-
     return cancerous_classes.get(class_name, None)
 
 # Function to make predictions with thresholding and majority voting
@@ -294,7 +269,7 @@ def predict_with_threshold_and_majority(models, img_path, threshold=0.8):
     for model in models:
         preds = model.predict(img)
         class_idx = np.argmax(preds)
-        class_prob = preds[0, class_idx]
+        # class_prob = preds[0, class_idx]
         class_name = classes[class_idx]
         predictions.append(class_name)
 

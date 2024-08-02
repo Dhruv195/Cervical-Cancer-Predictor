@@ -17,7 +17,7 @@ Once you have cloned the repository, navigate to the project directory and insta
 Front-End
 
 ```bash
-cd react-frontend
+cd frontend
 npm install
 npm start
 ```
@@ -25,7 +25,9 @@ npm start
 Back-End
 
 ```bash
-cd flask-backend
-pip install -r requirements.txt
+uv venv
+.venv/Scripts/activate
+cd backend
+uv pip install -r requirements.txt
 flask run
 ```
